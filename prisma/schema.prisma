@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String?
+  email        String   @unique
+  password     String?
+  mobileNumber String?
+  gender       String?
+  city         String?
+  createdAt    DateTime @default(now())
+}
+
+model Userprofile {
+  id           Int     @id @default(autoincrement())
+  name         String?
+  email        String? @unique
+  password     String?
+  mobileNumber String?
+  gender       String?
+  city         String?
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+}
+
+model Login {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  email     String?
+  password  String?
+  createdAt DateTime @default(now())
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  name        String
+  title       String?  
+  description String? 
+  parentId    Int?     
+  parent      Item?    @relation("ItemHierarchy", fields: [parentId], references: [id])
+  children    Item[]   @relation("ItemHierarchy")
+  images      Image[]  @relation("ItemImages")
+  status      String   @default("active")
+}
+
+model Image {
+  id     Int    @id @default(autoincrement())
+  url    String
+  itemId Int
+  item   Item   @relation("ItemImages", fields: [itemId], references: [id])
+}
+
+// model Location {
+//   id        Int     @id @default(autoincrement())
+//   name      String
+//   type      String  
+//   parentId  Int?    
+//   parent    Location? @relation("LocationHierarchy", fields: [parentId], references: [id])
+//   children  Location[] @relation("LocationHierarchy")
+//   createdAt DateTime @default(now())
+// }
+
+model Country {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
